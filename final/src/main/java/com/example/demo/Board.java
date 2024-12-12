@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 @Table(name = "board")
 public class Board {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private int password;
     private String nickname;

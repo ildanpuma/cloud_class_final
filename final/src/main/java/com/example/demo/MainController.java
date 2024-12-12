@@ -14,51 +14,56 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping(path="/demo")
 public class MainController {
-  @Autowired
-  private BoardRepository boardRepository;
+    @Autowired
+    private BoardRepository boardRepository;
 
-  @PostMapping(path="/add")
-  public String addNewBoard (@RequestParam int password, @RequestParam String nickname, @RequestParam String body) {
-    Board n = new Board();
-    n.setPassword(password);
-    n.setBody(body);
-    n.setNickname(nickname);
-    boardRepository.save(n);
-    return "redirect:/demo/board";
-  }
+    @PostMapping(path="/add")
+    public String addNewBoard (@RequestParam int password, @RequestParam String nickname, @RequestParam String body) {
+        Board n = new Board();
+        n.setPassword(password);
+        n.setBody(body);
+        n.setNickname(nickname);
+        boardRepository.save(n);
+        return "redirect:/demo/board";
+    }
 
-  @PostMapping(path="/delete")
-  public String deleteBoard(@RequestParam int id, @RequestParam int password) {
-      Board board = boardRepository.findById(id).orElse(null);
-      if (board != null && board.getPassword() == password) {
-          boardRepository.deleteById(id);
-      }
-      return "redirect:/demo/board";
-  }
+    @PostMapping(path="/delete")
+    public String deleteBoard(@RequestParam int id, @RequestParam int password) {
+        Board board = boardRepository.findById(id).orElse(null);
+        if (board != null && board.getPassword() == password) {
+            boardRepository.deleteById(id);
+            return "redirect:/demo/view?id=" + id + "&status=success";
+        } else {
+            return "redirect:/demo/view?id=" + id + "&status=failure";
+        }
+    }
 
-  @GetMapping(path="/board")
-  public String getAllBoards(Model model, @RequestParam(defaultValue = "0") int page) {
-      Pageable pageable = PageRequest.of(page, 10);
-      Page<Board> boardPage = boardRepository.findAll(pageable);
-      model.addAttribute("boards", boardPage.getContent());
-      model.addAttribute("totalPages", boardPage.getTotalPages());
-      model.addAttribute("currentPage", page);
-      return "board";
-  }
+    @GetMapping(path="/board")
+    public String getAllBoards(Model model, @RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<Board> boardPage = boardRepository.findAll(pageable);
+        model.addAttribute("boards", boardPage.getContent());
+        model.addAttribute("totalPages", boardPage.getTotalPages());
+        model.addAttribute("currentPage", page);
+        return "board";
+    }
 
-  @GetMapping(path="/add")
-  public String showAddBoardForm(Model model) {
-      model.addAttribute("board", new Board());
-      return "addBoard";
-  }
+    @GetMapping(path="/add")
+    public String showAddBoardForm(Model model) {
+        model.addAttribute("board", new Board());
+        return "addBoard";
+    }
 
-  @GetMapping(path="/view")
-  public String viewBoard(@RequestParam int id, Model model) {
-      Board board = boardRepository.findById(id).orElse(null);
-      if (board != null) {
-          model.addAttribute("board", board);
-          return "viewBoard";
-      }
-      return "redirect:/demo/board";
-  }
+    @GetMapping(path="/view")
+    public String viewBoard(@RequestParam int id, @RequestParam(required = false) String status, Model model) {
+        Board board = boardRepository.findById(id).orElse(null);
+        if (board != null) {
+            model.addAttribute("board", board);
+            if (status != null) {
+                model.addAttribute("status", status);
+            }
+            return "viewBoard";
+        }
+        return "redirect:/demo/board";
+    }
 }

@@ -7,7 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "board")
+@Table(name = "board") //가져올 테이블 이름
 public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,6 +16,8 @@ public class Board {
     private String nickname;
     private String body;
 
+
+    //getter setter 메서드
     public int getId() {
         return id;
     }

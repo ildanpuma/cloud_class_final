@@ -30,7 +30,7 @@ public class MainController {
     @PostMapping(path="/delete")
     public String deleteBoard(@RequestParam int id, @RequestParam int password) {
         Board board = boardRepository.findById(id).orElse(null);
-        if (board != null && board.getPassword() == password) {
+        if (board != null && board.getPassword() == password) {//삭제조건 password가 일치할시
             boardRepository.deleteById(id);
             return "redirect:/demo/view?id=" + id + "&status=success";
         } else {
@@ -40,7 +40,7 @@ public class MainController {
 
     @GetMapping(path="/board")
     public String getAllBoards(Model model, @RequestParam(defaultValue = "0") int page) {
-        Pageable pageable = PageRequest.of(page, 10);
+        Pageable pageable = PageRequest.of(page, 10); //10페이지마다 페이징
         Page<Board> boardPage = boardRepository.findAll(pageable);
         model.addAttribute("boards", boardPage.getContent());
         model.addAttribute("totalPages", boardPage.getTotalPages());

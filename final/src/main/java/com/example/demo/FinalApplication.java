@@ -10,6 +10,7 @@ import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 
+//Thymeleaf 설정
 @SpringBootApplication
 public class FinalApplication implements WebMvcConfigurer {
 
